@@ -4,6 +4,8 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   entry: {
     background: "./src/background.ts",
+    contentScript: "./src/contentScript.ts",
+    injected: "./src/injected.ts",
   },
   mode: "development",
   devtool: "cheap-module-source-map",
@@ -14,7 +16,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.m?js$/,
+        test: /\.m?(j|t)sx?$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -24,6 +26,14 @@ module.exports = {
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
+    // fallback: {
+    //   url: false,
+    //   https: false,
+    //   http: false,
+    //   util: false,
+    //   net: false,
+    //   zlib: false,
+    // },
   },
   plugins: [
     new CopyPlugin({

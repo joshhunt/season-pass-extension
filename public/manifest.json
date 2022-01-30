@@ -4,7 +4,19 @@
   "version": "0.1",
   "manifest_version": 2,
   "background": {
-    "scripts": ["background.bundle.js"],
-    "persistent": false
-  }
+    "scripts": ["background.bundle.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.bungie.net/*"],
+      "js": ["contentScript.bundle.js"]
+    }
+  ],
+  "permissions": [
+    "storage",
+    "webRequest",
+    "webRequestBlocking",
+    "*://*.bungie.net/*"
+  ],
+  "web_accessible_resources": ["injected.bundle.js"]
 }
