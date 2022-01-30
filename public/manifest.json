@@ -1,0 +1,10 @@
+{
+  "name": "Season Pass Pass",
+  "description": "Travel back in time and pull rewards from any previous season pass",
+  "version": "0.1",
+  "manifest_version": 2,
+  "background": {
+    "scripts": ["background.bundle.js"],
+    "persistent": false
+  }
+}
