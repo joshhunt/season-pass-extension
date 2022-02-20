@@ -1,0 +1,157 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Inter", "system-ui";
+  background-color: rgb(14, 18, 22);
+  /* color: #fafafa; */
+  color: rgb(245, 246, 250);
+  background-position: center top;
+  background-size: cover;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+html,
+body,
+.root {
+  width: 369px;
+}
+
+@supports (font-variation-settings: normal) {
+  html {
+    font-family: "Inter var", "system-ui";
+  }
+}
+
+.title {
+  font-size: 16px;
+  margin: 0;
+}
+
+.root {
+  background: linear-gradient(
+    rgba(14, 18, 22, 0.98) 16px,
+    rgba(14, 18, 22, 0.7)
+  );
+  padding: 16px;
+}
+
+.header {
+  margin: -16px -16px 0 -16px;
+  padding: 16px;
+  /* background: linear-gradient(rgba(14, 18, 22, 0.9) 16px, rgba(14, 18, 22, 0)); */
+  display: flex;
+  justify-content: space-between;
+}
+
+.status-inactive,
+.status-active {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-inactive .tag,
+.status-active .tag {
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-active .tag {
+  /* background: #4cd137; */
+  background: #e84118;
+  /* color: #2f3640; */
+  padding: 2px 6px;
+}
+
+.status-inactive {
+  /* outline: 2px solid #e84118; */
+  /* color: #4cd137; */
+  opacity: 0.8;
+}
+
+.explainer {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #e6e6e7;
+}
+
+.explainer .tag {
+  font-weight: 500;
+  color: white;
+}
+
+.link {
+  font-weight: 500;
+  color: white;
+  text-decoration: underline;
+}
+
+.link-button,
+.button {
+  background: rgba(245, 246, 250, 0.15);
+  appearance: none;
+  border: none;
+  padding: 0 10px;
+  border-radius: 6px;
+  color: white;
+  font-family: "Inter", "system-ui";
+  font-size: 13px;
+  line-height: 25px;
+  backdrop-filter: saturate(0) blur(1px);
+  font-size: 12px;
+  transition: 50ms ease-in-out all;
+}
+
+.fakeSelect:hover .button,
+.link-button:hover,
+.button:hover {
+  background: rgba(245, 246, 250, 0.25);
+  backdrop-filter: saturate(0) blur(1px);
+}
+
+.link-button {
+  background: none;
+  backdrop-filter: none;
+  color: #e6e6e7;
+}
+
+.fakeSelect {
+  position: relative;
+  display: inline-block;
+}
+
+.fakeSelectButton {
+  display: inline-block;
+}
+
+.fakeSelectMenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+}
+
+.space {
+  display: inline-block;
+  width: 16px;
+}
+
+.space-v {
+  display: block;
+  height: 16px;
+}
+
+.changed {
+  margin: 0;
+}

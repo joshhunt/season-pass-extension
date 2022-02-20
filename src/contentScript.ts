@@ -1,7 +1,7 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import browser from "webextension-polyfill";
-import { sendMessage, waitForMessage } from "./utils";
+import { hasTimedout, sendMessage, waitForMessage } from "./utils";
 
 function injectScript(scriptName: string) {
   return new Promise<void>((resolve) => {
@@ -17,10 +17,15 @@ function injectScript(scriptName: string) {
 }
 
 async function main() {
+  const values = await browser.storage.local.get();
+
+  if (hasTimedout(values.lastChangedDate)) {
+    console.log("content script giving up");
+    return;
+  }
+
   await injectScript("injected.bundle.js");
   await waitForMessage("SEASON_PASS_INJECTED_LOADED");
-
-  const values = await browser.storage.local.get();
 
   console.log("[CONTENT] Extension storage:", values);
 

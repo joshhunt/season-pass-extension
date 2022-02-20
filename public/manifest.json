@@ -1,22 +1,52 @@
 {
   "name": "Season Pass Pass",
   "description": "Travel back in time and pull rewards from any previous season pass",
-  "version": "0.1",
+  "version": "0.3.0",
   "manifest_version": 2,
   "background": {
-    "scripts": ["background.bundle.js"]
+    "scripts": [
+      "background.bundle.js"
+    ]
   },
   "content_scripts": [
     {
-      "matches": ["*://*.bungie.net/*"],
-      "js": ["contentScript.bundle.js"]
+      "matches": [
+        "*://*.bungie.net/*"
+      ],
+      "js": [
+        "contentScript.bundle.js"
+      ]
     }
   ],
+  "icons": {
+    "16": "icons/icon_16.png",
+    "32": "icons/icon_32.png",
+    "48": "icons/icon_48.png",
+    "64": "icons/icon_32@2x.png",
+    "96": "icons/icon_48@2x.png",
+    "128": "icons/icon_128.png",
+    "256": "icons/icon_128@2x.png"
+  },
   "permissions": [
     "storage",
     "webRequest",
     "webRequestBlocking",
     "*://*.bungie.net/*"
   ],
-  "web_accessible_resources": ["injected.bundle.js"]
+  "web_accessible_resources": [
+    "injected.bundle.js"
+  ],
+  "browser_action": {
+    "default_icon": {
+      "16": "icons/icon_16.png",
+      "32": "icons/icon_32.png",
+      "48": "icons/icon_48.png",
+      "64": "icons/icon_32@2x.png",
+      "96": "icons/icon_48@2x.png",
+      "128": "icons/icon_128.png",
+      "256": "icons/icon_128@2x.png"
+    },
+    "default_title": "Season Pass Pass",
+    "default_popup": "browserAction.html"
+  }
 }

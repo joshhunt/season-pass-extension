@@ -1,10 +1,13 @@
-interface Season {
+export interface Season {
+  name: string;
   image: string;
   productPageLink: {
     legacy: boolean;
     url: string;
   };
   progressPageImage: string;
+  startDate: Date;
+  endDate: Date;
   seasonNumber: number;
   actionRouteString: string;
   smallIcon?: string;
@@ -15,7 +18,10 @@ interface Season {
 
 export const SEASONS: Season[] = [
   {
+    name: "Season of the Lost",
     hash: 2809059428,
+    startDate: new Date("2021-08-24T17:00:00Z"),
+    endDate: new Date("2022-02-22T17:00:00Z"),
     image: "/7/ca/destiny/bgs/season15/s15_key-art-final.jpg",
     productPageLink: {
       legacy: false,
@@ -28,7 +34,10 @@ export const SEASONS: Season[] = [
     smallIcon: "7/ca/destiny/bgs/season15/s15_season_icon.png",
   },
   {
+    name: "Season of the Splicer",
     hash: 2809059429,
+    startDate: new Date("2021-05-11T17:00:00Z"),
+    endDate: new Date("2021-08-24T17:00:00Z"),
     image: "/7/ca/destiny/bgs/season14/Season14_season_hub_bg.jpg",
     productPageLink: {
       legacy: false,
@@ -42,7 +51,10 @@ export const SEASONS: Season[] = [
     smallIcon: "7/ca/destiny/bgs/season14/s14_season_icon_square.png",
   },
   {
+    name: "Season of the Chosen",
     hash: 2809059426,
+    startDate: new Date("2021-02-09T17:00:00Z"),
+    endDate: new Date("2021-05-11T17:00:00Z"),
     image: "/7/ca/destiny/bgs/season13/Season13_Key_Art.jpg",
     productPageLink: {
       legacy: false,
@@ -56,7 +68,10 @@ export const SEASONS: Season[] = [
     smallIcon: "7/ca/destiny/bgs/season13/s13_icon.svg",
   },
   {
+    name: "Season of the Hunt",
     hash: 2809059427,
+    startDate: new Date("2020-11-10T17:00:00Z"),
+    endDate: new Date("2021-02-09T17:00:00Z"),
     image: "/7/ca/destiny/bgs/season12/ArticleBanner_01.jpg",
     productPageLink: {
       legacy: false,
@@ -70,7 +85,10 @@ export const SEASONS: Season[] = [
     smallIcon: "7/ca/destiny/bgs/season12/icon_season12_full.png",
   },
   {
+    name: "Season of Arrivals",
     hash: 2809059424,
+    startDate: new Date("2020-06-09T17:00:00Z"),
+    endDate: new Date("2020-11-10T17:00:00Z"),
     image: "/7/ca/destiny/bgs/season11/S11_hero_desktop_bg.jpg",
     productPageLink: {
       legacy: false,
@@ -83,7 +101,10 @@ export const SEASONS: Season[] = [
     smallIcon: "7/ca/destiny/bgs/season11/icon_season11_full.png",
   },
   {
+    name: "Season of the Worthy",
     hash: 2809059425,
+    startDate: new Date("2020-03-10T17:00:00Z"),
+    endDate: new Date("2020-06-09T17:00:00Z"),
     image: "/7/ca/destiny/bgs/season10/hero_desktop_bg.jpg",
     productPageLink: {
       legacy: false,
@@ -97,7 +118,10 @@ export const SEASONS: Season[] = [
     smallIcon: "7/ca/destiny/bgs/season10/gear_rasputin_icon.png",
   },
   {
+    name: "Season of Dawn",
     hash: 1743682819,
+    startDate: new Date("2019-12-10T17:00:00Z"),
+    endDate: new Date("2020-03-10T17:00:00Z"),
     image: "/7/ca/destiny/bgs/season_of_dawn/hero_desktop_bg.jpg",
     productPageLink: {
       legacy: false,
@@ -111,7 +135,10 @@ export const SEASONS: Season[] = [
     smallIcon: "7/ca/destiny/icons/icon_season_dawn.jpg",
   },
   {
+    name: "Season of The Undying",
     hash: 1743682818,
+    startDate: new Date("2019-10-01T17:00:00Z"),
+    endDate: new Date("2019-12-10T17:00:00Z"),
     image: "/7/ca/destiny/bgs/seasons/hero_desktop_bg1.jpg",
     productPageLink: {
       legacy: false,
@@ -122,4 +149,4 @@ export const SEASONS: Season[] = [
     seasonNumber: 8,
     actionRouteString: "SeasonOfTheUndying",
   },
-];
+].sort((a, b) => b.seasonNumber - a.seasonNumber);

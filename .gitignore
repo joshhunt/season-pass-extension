@@ -128,3 +128,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# hello
+dist
+dist-packaged
+artifacts
+
+dist.crx
+dist.pem

@@ -2,52 +2,47 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import fetchIntercept, { FetchInterceptorResponse } from "fetch-intercept";
-import { sendMessage, waitForMessage } from "./utils";
-import { SEASONS } from "./seasons";
+import { hasTimedout, sendMessage, waitForMessage } from "./utils";
 
 console.log("registering fetchIntercept in injected script");
 
-const SEASON_BACKGROUNDS = {};
+const storage: {
+  seasonHash?: number;
+} = {};
 
 async function main() {
   sendMessage("SEASON_PASS_INJECTED_LOADED");
   const values = await waitForMessage("SEASON_PASS_LOCAL_STORAGE");
-  console.log("[INJECTED] Got storage values", values.data);
+  storage.seasonHash = Number(values.data.payload.seasonHash);
 
-  const unregisterFetchIntercept = fetchIntercept.register({
-    request: function (url, config) {
-      // Modify the url or config here
+  if (hasTimedout(values.data.payload.lastChangedDate)) {
+    console.log("Aborting out of injected, not intercepting fetch");
+    return;
+  }
+
+  fetchIntercept.register({
+    request(url, config) {
       return [url, config];
     },
 
-    requestError: function (error) {
-      // Called when an error occured during another 'request' interceptor call
+    requestError(error) {
       return Promise.reject(error);
     },
 
-    response: function (response) {
-      // console.info("[INTERCEPT]", response.url);
-
+    response(response) {
       if (response.url.includes("bungie.net/Platform/Settings/")) {
         return response.json().then(async (settingsJson) => {
-          const pastSeasonHashes =
-            settingsJson.Response.destiny2CoreSettings.pastSeasonHashes;
-          console.log("intercepted pastSeasonHashes", pastSeasonHashes);
+          console.log("[INJECTED] Intercepted Settings response");
 
-          settingsJson.Response.destiny2CoreSettings.pastSeasonHashes =
-            pastSeasonHashes.slice(0, pastSeasonHashes.length - 1);
-
-          const lastSeasonHash = pastSeasonHashes[pastSeasonHashes.length - 1];
-
-          const seasonData = SEASONS.find((v) => v.hash === lastSeasonHash);
-
-          console.log("Set season to", lastSeasonHash, seasonData);
-
-          const imageResp = await fetch(seasonData?.progressPageImage ?? "", {
-            method: "head",
-          });
-
-          console.log("image status", imageResp.status);
+          if (storage.seasonHash && storage.seasonHash > 0) {
+            console.log(
+              "[INJECTED] Overriding season hash to",
+              storage.seasonHash
+            );
+            settingsJson.Response.destiny2CoreSettings.pastSeasonHashes.push(
+              storage.seasonHash
+            );
+          }
 
           const altResponse = new Response(
             JSON.stringify(settingsJson),
@@ -62,8 +57,7 @@ async function main() {
       return response;
     },
 
-    responseError: function (error) {
-      // Handle an fetch error
+    responseError(error) {
       return Promise.reject(error);
     },
   });
