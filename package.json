@@ -4,7 +4,7 @@
   "main": "index.js",
   "repository": "git@github.com:joshhunt/season-pass-extension.git",
   "author": "Josh Hunt <joshhunt@users.noreply.github.com>",
-  "license": "MIT",
+  "license": " AGPL-3.0-only",
   "scripts": {
     "dev": "node manifestIcons.js && webpack --mode=development --watch",
     "build": "rimraf dist && node manifestIcons.js && webpack --mode=production",
