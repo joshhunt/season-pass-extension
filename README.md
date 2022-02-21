@@ -1,8 +1,8 @@
 # Season Pass Pass
 
 1. [Installing a release](#installing-a-release)
-<!-- 2. [Using the extension](#using-the-extension) -->
-2. [Building from source](#building-from-source)
+2. [Using the extension](#using-the-extension)
+3. [Building from source](#building-from-source)
 
 Season Pass Pass is a browser extension for Firefox and Chrome that lets you view any previous Season Pass on Bungie.net and claim rewards from them.
 
@@ -63,4 +63,8 @@ Season Pass Pass has been built with **Node 16.13.2** and **Yarn 1.22.15**. The 
 - `yarn package`
 - Extension is packaged into ./artifacts directory as a zip archive
 
-<!-- ## Permissions -->
+## Permissions
+
+**This browser extension requests permission to view and modify all data on bungie.net**, and needs this to operate. It only uses these permissions to do the bare minumum functionality that's expected of this extension. This extension uses no analytics, tracking, reporting or telemetry.
+
+Because Bungie.net login happens on the Playstation/Xbox/Steam/etc websites, and this extension [requests permisision to _bungie.net only_](https://github.com/joshhunt/season-pass-extension/blob/v1.0.0/public/manifest.json#L34), **this extension _does not_ have the ability to see your passwords for those sites.**
