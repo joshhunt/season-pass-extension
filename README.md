@@ -40,6 +40,8 @@ I didn't submit this extension to Firefox and Chrome review soon enough, so it i
 3. Visit the [Previous Season](https://www.bungie.net/7/en/Seasons/PreviousSeason) page and claim rewards. Be sure to view the rewards available on each character.
    - If the Previous Season page displays a spinner forever, make sure you're logged in and hard refresh the page.
 
+This extension works by intercepting and modifying some Bungie.net requests. The extension will automatically reset itself after 1 hour, but when you're finished using it make sure you disable it in your browser's extension settings.
+
 ## Building from source
 
 ### Requirements
