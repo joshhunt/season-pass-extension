@@ -12,9 +12,9 @@ Season Pass Pass is a browser extension for Firefox and Chrome that lets you vie
 
 ## Installing a release
 
-I didn't submit this extension to Firefox and Chrome review soon enough, so it is not yet available for install from the respective browser extension sites. Instead, you can install the extension manually using the browser's developer mode, which is fairly easy.
-
 ### Chrome
+
+I didn't submit this extension for Google Chrome review soon enough, so it is not yet available for install from the Chrome Web Store. Instead, you can install the extension manually using the Chrome's developer mode, which is fairly easy.
 
 1. Download the latest release from [Releases](https://github.com/joshhunt/season-pass-extension/releases) and unzip to a safe spot.
 2. Go to Chrome's Extension page: "Three dots menu" > Settings > Extensions (or, navigate to `chrome://extensions`)
@@ -25,11 +25,7 @@ I didn't submit this extension to Firefox and Chrome review soon enough, so it i
 
 ### Firefox
 
-1. Download the latest release from [Releases](https://github.com/joshhunt/season-pass-extension/releases) and keep in a safe spot. There is no need to unzip it.
-2. Go to the page `about://debugging` and click "This Firefox" in the right hand menu.
-3. Click the "Load temporary Add-on..." button and select the zipped extension from step 1.
-4. You should see the <img src="./public/icons/icon_16@2x.png" height="16" style="vertical-align: middle"> Season Pass Pass extension display in the "Temporary Extensions" list.
-5. The extension will automatically be removed when you restart Firefox. If you want to use it again you will need to reinstall it.
+The extension can be installed directly from the Firefox Add-ons website https://addons.mozilla.org/en-GB/firefox/addon/season-pass-pass/
 
 ## Using the extension
 
@@ -65,6 +61,6 @@ Season Pass Pass has been built with **Node 16.13.2** and **Yarn 1.22.15**. The 
 
 ## Permissions
 
-**This browser extension requests permission to view and modify all data on bungie.net**, and needs this to operate. It only uses these permissions to do the bare minumum functionality that's expected of this extension. This extension uses no analytics, tracking, reporting or telemetry.
+This browser extension requires permission to view and modify all data on bungie.net. It only uses these permissions to do the bare minumum functionality that's expected of this extension. This extension uses no analytics, tracking, reporting or telemetry. No data leaves this extension.
 
 Because Bungie.net login happens on the Playstation/Xbox/Steam/etc websites, and this extension [requests permisision to _bungie.net only_](https://github.com/joshhunt/season-pass-extension/blob/v1.0.0/public/manifest.json#L34), **this extension _does not_ have the ability to see your passwords for those sites.**
