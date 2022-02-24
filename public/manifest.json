@@ -1,23 +1,13 @@
 {
   "name": "Season Pass Pass",
   "description": "Travel back in time and pull rewards from any previous season pass",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "manifest_version": 2,
   "background": {
     "scripts": [
       "background.bundle.js"
     ]
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "*://*.bungie.net/*"
-      ],
-      "js": [
-        "contentScript.bundle.js"
-      ]
-    }
-  ],
   "icons": {
     "16": "icons/icon_16.png",
     "32": "icons/icon_32.png",

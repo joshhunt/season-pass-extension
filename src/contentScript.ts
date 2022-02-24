@@ -17,15 +17,16 @@ function injectScript(scriptName: string) {
 }
 
 async function main() {
+  console.log("🎫 Season Pass Pass content script");
+  await injectScript("injected.bundle.js");
+  await waitForMessage("SEASON_PASS_INJECTED_LOADED");
+
   const values = await browser.storage.local.get();
 
   if (hasTimedout(values.lastChangedDate)) {
     console.log("content script giving up");
     return;
   }
-
-  await injectScript("injected.bundle.js");
-  await waitForMessage("SEASON_PASS_INJECTED_LOADED");
 
   console.log("[CONTENT] Extension storage:", values);
 

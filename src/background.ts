@@ -6,7 +6,8 @@ import { changesToValues, hasTimedout } from "./utils";
 
 import debug from "debug";
 
-localStorage.debug = "background";
+localStorage.debug = "*";
+debug.enabled("*");
 
 const log = debug("background");
 
@@ -14,10 +15,63 @@ let seasonOverride = -1;
 let bungieApiKey: string | undefined = undefined;
 let lastChangedDate = 0;
 
+const allBgImages = SEASONS.map(
+  (v) => `https://www.bungie.net${v.progressPageImage}`
+);
+
+browser.storage.onChanged.addListener((changes, area) => {
+  log("storage.onChanged emitted", changes);
+  const values = changesToValues(changes);
+  unpackStorageValues(values);
+});
+
+browser.storage.local.get().then((values) => {
+  log("storage.local.get", values);
+  unpackStorageValues(values);
+});
+
+browser.webRequest.onSendHeaders.addListener(
+  interceptPlatformHeaders,
+  {
+    urls: ["https://www.bungie.net/Platform/*"],
+  },
+  ["requestHeaders"]
+);
+
+browser.webRequest.onBeforeRequest.addListener(
+  interceptBackgroundImages,
+  { urls: allBgImages },
+  ["blocking"]
+);
+
+function chromeOnlySettingsIntercept() {
+  log("Registering chrome-only onBeforeRequest");
+  browser.webRequest.onBeforeRequest.addListener(
+    chromeInterceptSettingsRequest,
+    { urls: ["https://www.bungie.net/Platform/Settings*"] },
+    ["blocking"]
+  );
+}
+
+chromeOnlySettingsIntercept();
+
+// if (browser.runtime.getBrowserInfo) {
+//   browser.runtime.getBrowserInfo().then((browserInfo) => {
+//     if (browserInfo.name.toLowerCase() !== "firefox") {
+//       chromeOnlySettingsIntercept();
+//     }
+//   });
+// } else {
+//   // If we don't have getBrowserInfo, we're probably in Chrome
+//   chromeOnlySettingsIntercept();
+// }
+
+const wait = (timeout: number) =>
+  new Promise((resolve) => setTimeout(resolve, timeout));
+
 function unpackStorageValues(values: Record<string, any>) {
-  console.group("Synced storage values to local variables");
+  console.groupCollapsed("Synced storage values to local variables");
   log("Values:", values);
-  log("from:", new Error().stack);
 
   if ("lastChangedDate" in values && hasTimedout(values.lastChangedDate)) {
     log("Last change was too long ago, clearing all storage");
@@ -44,87 +98,98 @@ function unpackStorageValues(values: Record<string, any>) {
   console.groupEnd();
 }
 
-browser.storage.onChanged.addListener((changes, area) => {
-  log("storage.onChanged emitted", changes);
-  const values = changesToValues(changes);
-  unpackStorageValues(values);
-});
-
-browser.storage.local.get().then((values) => {
-  log("storage.local.get", values);
-  unpackStorageValues(values);
-});
-
-async function handleSendHeaders(
+/**
+ * Intercepts Bungie.net API header requests to obtain the API key
+ */
+async function interceptPlatformHeaders(
   request: browser.WebRequest.OnSendHeadersDetailsType
 ) {
   const apiKeyHeader = request.requestHeaders?.find(
     (v) => v.name.toLowerCase() === "x-api-key"
   );
   if (!apiKeyHeader?.value) return;
+  if (request.url.includes("?seasonPassPass")) return;
 
   const path = new URL(request.url).pathname;
   log("Grabbed API key from Bungie request", path);
   await browser.storage.local.set({ bungieApiKey: apiKeyHeader.value });
 }
 
-const allBgImages = SEASONS.map(
-  (v) => `https://www.bungie.net${v.progressPageImage}`
-);
+/**
+ * Intercepts requests for season background images to return the background image for the overridden season
+ */
+function interceptBackgroundImages(
+  request: browser.WebRequest.OnSendHeadersDetailsType
+): { redirectUrl: string } | undefined {
+  if (hasTimedout(lastChangedDate)) {
+    return undefined;
+  }
 
-const requestFilter = {
-  urls: ["https://www.bungie.net/Platform/*"],
-};
+  const requestedImagePathname = new URL(request.url).pathname;
+  console.groupCollapsed("Request for", requestedImagePathname);
 
-browser.webRequest.onSendHeaders.addListener(handleSendHeaders, requestFilter, [
-  "requestHeaders",
-]);
+  log("seasonOverride", seasonOverride);
 
-browser.webRequest.onBeforeRequest.addListener(
-  (req) => {
-    if (hasTimedout(lastChangedDate)) {
-      return undefined;
-    }
+  const seasonForOverride = SEASONS.find((v) => v.hash === seasonOverride);
+  log("seasonForOverride", seasonForOverride);
 
-    const requestedImagePathname = new URL(req.url).pathname;
-    console.group("Request for", requestedImagePathname);
-
-    log("seasonOverride", seasonOverride);
-
-    const seasonForOverride = SEASONS.find((v) => v.hash === seasonOverride);
-    log("seasonForOverride", seasonForOverride);
-
-    if (!seasonForOverride) {
-      log("Could not find season data for the override");
-      console.groupEnd();
-      return undefined;
-    }
-
-    if (seasonForOverride.progressPageImage === requestedImagePathname) {
-      log("Correct image anyway");
-      console.groupEnd();
-      return undefined;
-    }
-
-    const requestedSeason = SEASONS.find(
-      (v) => v.progressPageImage === requestedImagePathname
-    );
-
-    log("The season the browser requested is", requestedSeason);
-
-    if (requestedSeason && requestedSeason.endDate.getTime() < Date.now()) {
-      const redirectUrl = `https://www.bungie.net${seasonForOverride.progressPageImage}`;
-      log("Redirecting", req.url, "to", redirectUrl);
-
-      console.groupEnd();
-      return {
-        redirectUrl,
-      };
-    }
-
+  if (!seasonForOverride) {
+    log("Could not find season data for the override");
     console.groupEnd();
     return undefined;
-  },
-  { urls: allBgImages },
-  ["blocking"]
-);
+  }
+
+  if (seasonForOverride.progressPageImage === requestedImagePathname) {
+    log("Correct image anyway");
+    console.groupEnd();
+    return undefined;
+  }
+
+  const requestedSeason = SEASONS.find(
+    (v) => v.progressPageImage === requestedImagePathname
+  );
+
+  log("The season the browser requested is", requestedSeason);
+
+  if (requestedSeason && requestedSeason.endDate.getTime() < Date.now()) {
+    const redirectUrl = `https://www.bungie.net${seasonForOverride.progressPageImage}`;
+    log("Redirecting", request.url, "to", redirectUrl);
+
+    console.groupEnd();
+    return {
+      redirectUrl,
+    };
+  }
+
+  console.groupEnd();
+  return undefined;
+}
+
+/**
+ * Intercepts requests for the Settings endpoint and potentially provides a modified response
+ */
+function chromeInterceptSettingsRequest(
+  request: browser.WebRequest.OnBeforeSendHeadersDetailsType
+) {
+  const logIntercept = debug("background:intercept:" + request.requestId);
+  logIntercept("Intercepted settings request", request.url);
+
+  if (request.url.includes("?seasonPassPass")) {
+    logIntercept("Intercepted our own request. Stopping.");
+    return;
+  }
+
+  if (hasTimedout(lastChangedDate)) {
+    logIntercept("Has timed out. Stopping.");
+    return;
+  }
+
+  if (!seasonOverride) {
+    logIntercept("Don't have a season override. Stopping.");
+    return;
+  }
+
+  return {
+    redirectUrl: `https://destiny-activities.destinyreport.workers.dev/seasonPassPass?season=${seasonOverride}`,
+  };
+}

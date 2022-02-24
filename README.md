@@ -61,6 +61,8 @@ Season Pass Pass has been built with **Node 16.13.2** and **Yarn 1.22.15**. The 
 
 ## Permissions
 
-This browser extension requires permission to view and modify all data on bungie.net. It only uses these permissions to do the bare minumum functionality that's expected of this extension. This extension uses no analytics, tracking, reporting or telemetry. No data leaves this extension.
+This browser extension requires permission to view and modify all data on bungie.net. It only uses these permissions to do the bare minumum functionality that's expected of this extension. This extension uses no analytics, tracking, reporting or telemetry.
+
+In order to change the "Previous Season", this extension redirects the Bungie API settings request to another service which provides a "modified" settings response with the new previous season. No personal information is sent with this request, and nothing is tracked or stored.
 
 Because Bungie.net login happens on the Playstation/Xbox/Steam/etc websites, and this extension [requests permisision to _bungie.net only_](https://github.com/joshhunt/season-pass-extension/blob/v1.0.0/public/manifest.json#L34), **this extension _does not_ have the ability to see your passwords for those sites.**

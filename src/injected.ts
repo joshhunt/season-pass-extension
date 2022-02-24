@@ -20,9 +20,10 @@ async function main() {
     return;
   }
 
+  console.log("[INJECTED] fetchIntercept.register");
   fetchIntercept.register({
-    request(url, config) {
-      return [url, config];
+    request(request, config) {
+      return [request, config];
     },
 
     requestError(error) {

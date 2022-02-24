@@ -8,9 +8,8 @@
   "scripts": {
     "dev": "node manifestIcons.js && webpack --mode=development --watch",
     "build": "rimraf dist && node manifestIcons.js && webpack --mode=production",
-    "zip": "rimraf artifacts/* && cd dist; bestzip ../artifacts/chrome.zip *",
     "package": "web-ext build",
-    "deploy": "yarn build && yarn zip"
+    "deploy": "yarn build && yarn package"
   },
   "dependencies": {
     "@babel/core": "^7.16.12",
