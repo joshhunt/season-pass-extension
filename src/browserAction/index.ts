@@ -1,8 +1,15 @@
-import React from "react";
-import reactDom from "react-dom";
+import { createElement } from "react";
+import { createRoot } from "react-dom/client";
 import App from "./App";
 
-reactDom.render(
-  React.createElement(App),
-  document.getElementById("react-root")
-);
+const rootNodeId = "react-root";
+const rootNode = document.getElementById(rootNodeId);
+
+if (!rootNode) {
+  throw new Error(`Extension entry with id "${rootNodeId}" not found`);
+}
+
+const root = createRoot(rootNode);
+const appElement = createElement(App);
+
+root.render(appElement);
