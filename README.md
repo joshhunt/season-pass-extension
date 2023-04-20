@@ -26,7 +26,7 @@ Season Pass Pass is a browser extension for Firefox and Chrome that lets you vie
 <!-- The extension can be installed directly from the Firefox Add-ons website https://addons.mozilla.org/en-GB/firefox/addon/season-pass-pass/ -->
 
 1. Download the latest release from [Releases](https://github.com/joshhunt/season-pass-extension/releases) and keep in a safe spot. There is no need to unzip it.
-2. Go to the page `about://debugging` and click "This Firefox" in the right hand menu.
+2. Go to the page `about:debugging` and click "This Firefox" in the right hand menu.
 3. Click the "Load temporary Add-on..." button and select the zipped extension from step 1.
 4. You should see the <img src="./public/icons/icon_16@2x.png" height="16" style="vertical-align: middle"> Season Pass Pass extension display in the "Temporary Extensions" list.
 5. The extension will automatically be removed when you restart Firefox. If you want to use it again you will need to reinstall it.
