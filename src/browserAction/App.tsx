@@ -8,6 +8,7 @@ import {
   getAll,
   setApiKey,
   includeTables,
+  getProgression,
 } from "@d2api/manifest-web";
 import { changesToValues, hasTimedout } from "../utils";
 import { Season, SEASONS } from "../seasons";
@@ -15,8 +16,9 @@ import { Season, SEASONS } from "../seasons";
 import "inter-ui/inter.css";
 import "./styles.css";
 import Explainer from "./Explainer";
+import { DestinySeasonDefinition } from "bungie-api-ts/destiny2";
 
-includeTables(["Season"]);
+includeTables(["Season", "Progression"]);
 
 function useExtensionStorage(): [
   Record<string, any>,
@@ -74,12 +76,13 @@ function useExtensionStorage(): [
   return [state, setExtensionStorage];
 }
 
-function isUsableSeason(
-  season: Season | NonNullable<ReturnType<typeof getSeason>>
-) {
+function isUsableSeason(season: DestinySeasonDefinition) {
   return (
     season.seasonNumber > 7 &&
-    new Date(season.endDate ?? Number.MAX_SAFE_INTEGER).getTime() < Date.now()
+    new Date(season.endDate ?? Number.MAX_SAFE_INTEGER).getTime() <
+      Date.now() &&
+    (getProgression(season.seasonPassProgressionHash ?? 0)?.rewardItems
+      ?.length ?? 0) > 0
   );
 }
 
@@ -88,7 +91,7 @@ async function loadSeasons(bungieApiKey: string) {
   await loadDefinitions();
 
   return getAll("Season")
-    .filter(isUsableSeason)
+    .filter((s) => isUsableSeason(s))
     .sort((seasonA, seasonB) => {
       return seasonA.seasonNumber - seasonB.seasonNumber;
     });
@@ -210,22 +213,12 @@ export default function App() {
           </>
         )}
 
-        {hasChanged && (
-          <>
-            <span className="space-v"></span>
-            <p className="changed">
-              Refresh the{" "}
-              <a
-                className="link"
-                target="_blank"
-                href="https://www.bungie.net/7/en/Seasons/PreviousSeason"
-              >
-                Previous Season
-              </a>{" "}
-              page to claim rewards.
-            </p>
-          </>
-        )}
+        <p className="small-explainer">
+          Note: Only seasons that have rewards that can still be pulled are
+          shown. There is a higher chance each season that previous seasons will
+          become unobtainable, so do not leave rewards unobtained that you would
+          be upset to lose.
+        </p>
       </div>
     </div>
   );

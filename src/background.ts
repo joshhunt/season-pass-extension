@@ -20,9 +20,20 @@ const allBgImages = SEASONS.map(
 );
 
 browser.storage.onChanged.addListener((changes, area) => {
+  const prevSeasonOverride = seasonOverride;
+
   log("storage.onChanged emitted", changes);
   const values = changesToValues(changes);
   unpackStorageValues(values);
+
+  if (
+    bungieApiKey &&
+    seasonOverride &&
+    seasonOverride > 0 &&
+    seasonOverride !== prevSeasonOverride
+  ) {
+    tryReloadTabs();
+  }
 });
 
 browser.storage.local.get().then((values) => {
@@ -96,6 +107,29 @@ function unpackStorageValues(values: Record<string, any>) {
   }
 
   console.groupEnd();
+}
+
+let lastRefresh = 0;
+
+async function tryReloadTabs() {
+  const sinceLastRefresh = Date.now() - lastRefresh;
+  log("ms since last refresh", sinceLastRefresh);
+
+  if (sinceLastRefresh < 2000) {
+    log("refreshed too recently, not going to ");
+    return;
+  }
+
+  lastRefresh = Date.now();
+
+  const bungieTabs = await browser.tabs.query({
+    url: "https://www.bungie.net/7/en/Seasons/PreviousSeason",
+  });
+
+  for (const tab of bungieTabs) {
+    log("Reloading tab", tab.id);
+    browser.tabs.reload(tab.id);
+  }
 }
 
 /**
